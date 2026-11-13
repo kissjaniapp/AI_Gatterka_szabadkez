@@ -23,8 +23,9 @@ jobs:
         shell: pwsh
         run: |
           choco install innosetup --yes --no-progress
-          $iscc = Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe'
-          if (!(Test-Path $iscc)) { $iscc = Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe' }
+          $programFilesX86 = [Environment]::GetFolderPath('ProgramFilesX86')
+          $iscc = Join-Path $programFilesX86 'Inno Setup 6\ISCC.exe'
+          if (!(Test-Path $iscc)) { throw 'Inno Setup 6 nem található' }
           & $iscc installer.iss
           if ($LASTEXITCODE -ne 0) { throw 'Telepito build hiba' }
       - uses: actions/upload-artifact@v4
